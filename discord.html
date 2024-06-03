@@ -61,6 +61,25 @@
             text-align: center;
             padding: 1em 0;
         }
+        #gameArea {
+            border: 2px solid #ff69b4;
+            width: 80vw;
+            height: 60vh;
+            margin: 0 auto;
+            position: relative;
+            background-color: white;
+        }
+        .player, .heart {
+            width: 30px;
+            height: 30px;
+            position: absolute;
+        }
+        .player {
+            background-color: #ff69b4;
+        }
+        .heart {
+            background-color: #ff1493;
+        }
     </style>
 </head>
 <body>
@@ -74,12 +93,89 @@
     </nav>
     <main>
         <div class="content">
-            <h2>NightCafe</h2>
-            <p>Shicho liebt den Discord-Server <a href="https://discord.gg/nightcafe">NightCafe</a>. Dieser Server ist ein Ort, an dem Kunst und Kreativität im Vordergrund stehen und Shicho findet dort immer wieder neue Inspiration und interessante Gespräche.</p>
+            <h2>Minispiel: Herz einsammeln</h2>
+            <div id="gameArea">
+                <div id="player" class="player"></div>
+                <div id="heart" class="heart"></div>
+            </div>
+            <p>Punktzahl: <span id="score">0</span></p>
         </div>
     </main>
     <div class="footer">
         <p>Mit Liebe geschrieben für Shicho</p>
     </div>
+    <script>
+        const player = document.getElementById('player');
+        const heart = document.getElementById('heart');
+        const scoreDisplay = document.getElementById('score');
+        const gameArea = document.getElementById('gameArea');
+        let score = 0;
+
+        const gameAreaRect = gameArea.getBoundingClientRect();
+        const playerSpeed = 10;
+
+        function movePlayer(x, y) {
+            const playerRect = player.getBoundingClientRect();
+            let newX = playerRect.left + x;
+            let newY = playerRect.top + y;
+
+            if (newX < gameAreaRect.left) newX = gameAreaRect.left;
+            if (newX + playerRect.width > gameAreaRect.right) newX = gameAreaRect.right - playerRect.width;
+            if (newY < gameAreaRect.top) newY = gameAreaRect.top;
+            if (newY + playerRect.height > gameAreaRect.bottom) newY = gameAreaRect.bottom - playerRect.height;
+
+            player.style.left = `${newX - gameAreaRect.left}px`;
+            player.style.top = `${newY - gameAreaRect.top}px`;
+
+            checkCollision();
+        }
+
+        function moveHeart() {
+            const maxX = gameArea.clientWidth - heart.clientWidth;
+            const maxY = gameArea.clientHeight - heart.clientHeight;
+
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            heart.style.left = `${randomX}px`;
+            heart.style.top = `${randomY}px`;
+        }
+
+        function checkCollision() {
+            const playerRect = player.getBoundingClientRect();
+            const heartRect = heart.getBoundingClientRect();
+
+            if (!(playerRect.right < heartRect.left || 
+                  playerRect.left > heartRect.right || 
+                  playerRect.bottom < heartRect.top || 
+                  playerRect.top > heartRect.bottom)) {
+                score++;
+                scoreDisplay.textContent = score;
+                moveHeart();
+            }
+        }
+
+        document.addEventListener('keydown', (event) => {
+            switch(event.key) {
+                case 'ArrowUp':
+                    movePlayer(0, -playerSpeed);
+                    break;
+                case 'ArrowDown':
+                    movePlayer(0, playerSpeed);
+                    break;
+                case 'ArrowLeft':
+                    movePlayer(-playerSpeed, 0);
+                    break;
+                case 'ArrowRight':
+                    movePlayer(playerSpeed, 0);
+                    break;
+            }
+        });
+
+        // Initialize player and heart positions
+        player.style.left = '0px';
+        player.style.top = '0px';
+        moveHeart();
+    </script>
 </body>
 </html>
