@@ -74,10 +74,10 @@
             border: 2px solid #ff69b4;
             width: 300px;
             height: 500px;
-            margin: 0 auto;
             position: relative;
             background-color: white;
             overflow: hidden;
+            margin: 0 auto;
         }
         .heart {
             width: 30px;
@@ -99,7 +99,7 @@
             50% { transform: scale(1.5); }
             100% { transform: scale(0); }
         }
-        .controls, .leaderboard {
+        .controls {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -107,8 +107,13 @@
         }
         .leaderboard {
             text-align: left;
+            margin: 1em;
         }
-        .controls button {
+        .leaderboard ul {
+            list-style: none;
+            padding: 0;
+        }
+        .controls button, #submitScore {
             margin: 0.5em;
             padding: 0.5em 1em;
             font-size: 1em;
@@ -116,11 +121,6 @@
             color: white;
             border: none;
             cursor: pointer;
-        }
-        .leaderboard input {
-            margin: 0.5em 0;
-            padding: 0.5em;
-            width: 100%;
         }
         #lives {
             display: flex;
@@ -137,6 +137,21 @@
         .life.broken {
             background-image: url('https://cdn.pixabay.com/photo/2017/01/31/17/27/heart-2024135_960_720.png'); /* Replace with actual broken heart image URL */
         }
+        #gameMenu {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        #countdown {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2em;
+            color: #ff69b4;
+        }
     </style>
 </head>
 <body>
@@ -150,8 +165,10 @@
     </nav>
     <main>
         <div class="controls">
-            <button id="startBtn">Start</button>
-            <button id="pauseBtn">Pause</button>
+            <div id="gameMenu">
+                <button id="startBtn">Start</button>
+            </div>
+            <div id="countdown" style="display: none;">3</div>
         </div>
         <div class="content">
             <div id="lives">
@@ -159,16 +176,14 @@
                 <div class="life" id="life2"></div>
                 <div class="life" id="life3"></div>
             </div>
-            <h2>Minispiel: Herzen einsammeln</h2>
             <div id="gameArea"></div>
             <p>Punktzahl: <span id="score">0</span></p>
             <p>Level: <span id="level">1</span></p>
+            <button id="pauseBtn" style="display:none;">Pause</button>
         </div>
         <div class="leaderboard">
             <h3>Leaderboard</h3>
             <ul id="leaderboardList"></ul>
-            <input type="text" id="playerName" placeholder="Dein Name">
-            <button id="submitScore">Punkte eintragen</button>
         </div>
     </main>
     <div class="footer">
@@ -184,6 +199,8 @@
         const startBtn = document.getElementById('startBtn');
         const pauseBtn = document.getElementById('pauseBtn');
         const livesDisplay = document.querySelectorAll('.life');
+        const gameMenu = document.getElementById('gameMenu');
+        const countdownDisplay = document.getElementById('countdown');
 
         let score = 0;
         let level = 1;
@@ -238,20 +255,37 @@
 
         function startGame() {
             resetGame();
-            gameInterval = setInterval(createHeart, heartSpeed);
+            gameMenu.style.display = 'none';
+            pauseBtn.style.display = 'block';
+            startCountdown(() => {
+                gameInterval = setInterval(createHeart, heartSpeed);
+            });
+        }
+
+        function startCountdown(callback) {
+            countdownDisplay.style.display = 'block';
+            let countdown = 3;
+            countdownDisplay.textContent = countdown;
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                countdownDisplay.textContent = countdown;
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    countdownDisplay.style.display = 'none';
+                    callback();
+                }
+            }, 1000);
         }
 
         function resetGame() {
+            clearInterval(gameInterval);
+            gameArea.innerHTML = '';
             score = 0;
             level = 1;
-            missedHearts = 0;
-            heartsCaught = 0;
             heartSpeed = 2000;
+            missedHearts = 0;
             scoreDisplay.textContent = score;
             levelDisplay.textContent = level;
-            clearInterval(gameInterval);
-            const hearts = document.querySelectorAll('.heart, .explosion');
-            hearts.forEach(heart => gameArea.removeChild(heart));
             updateLives();
         }
 
@@ -267,13 +301,15 @@
 
         function endGame() {
             clearInterval(gameInterval);
-            const playerName = playerNameInput.value;
-            if (!playerName) return alert('Bitte gib deinen Namen ein.');
+            const playerName = prompt('Spiel vorbei! Bitte gib deinen Namen ein:');
+            if (!playerName) return;
             const scoreEntry = document.createElement('li');
             scoreEntry.textContent = `${playerName}: ${score}`;
             leaderboardList.appendChild(scoreEntry);
             saveScore(playerName, score);
             resetGame();
+            gameMenu.style.display = 'block';
+            pauseBtn.style.display = 'none';
         }
 
         function saveScore(name, score) {
@@ -300,9 +336,15 @@
 
         pauseBtn.addEventListener('click', () => {
             isPaused = !isPaused;
+            if (isPaused) {
+                pauseBtn.textContent = 'Weiter';
+            } else {
+                pauseBtn.textContent = 'Pause';
+                startCountdown(() => {
+                    gameInterval = setInterval(createHeart, heartSpeed);
+                });
+            }
         });
-
-        submitScoreButton.addEventListener('click', endGame);
 
         document.addEventListener('DOMContentLoaded', updateLeaderboard);
     </script>
