@@ -185,11 +185,11 @@
             <h3>Leaderboard</h3>
             <ul id="leaderboardList"></ul>
         </div>
-        <div class="player-input">
-            <label for="playerName">Spielername:</label>
+        <div class="player-input" style="display:none;">
+            <label for
+="playerName">Spielername:</label>
             <input type="text" id="playerName" name="playerName">
-            <button id="submitScore
-">Punktzahl einreichen</button>
+            <button id="submitScore">Punktzahl einreichen</button>
         </div>
     </main>
     <div class="footer">
@@ -262,6 +262,7 @@
         function startGame() {
             resetGame();
             gameMenu.style.display = 'none';
+            startBtn.style.display = 'none';
             pauseBtn.style.display = 'block';
             startCountdown(() => {
                 gameInterval = setInterval(createHeart, heartSpeed);
@@ -319,6 +320,7 @@
             resetGame();
             gameMenu.style.display = 'block';
             pauseBtn.style.display = 'none';
+            startBtn.style.display = 'block';
         }
 
         function saveScore(name, score) {
