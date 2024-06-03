@@ -48,6 +48,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
         }
         .content {
             max-width: 800px;
@@ -82,15 +83,21 @@
             width: 30px;
             height: 30px;
             position: absolute;
-            background-image: url('https://path/to/heart.png'); /* Replace with actual heart image URL */
+            background-image: url('https://cdn.pixabay.com/photo/2017/01/31/17/27/heart-2024135_960_720.png'); /* Replace with actual heart image URL */
             background-size: cover;
         }
         .explosion {
             width: 30px;
             height: 30px;
             position: absolute;
-            background-image: url('https://path/to/explosion.png'); /* Replace with actual explosion image URL */
+            background-image: url('https://cdn.pixabay.com/photo/2017/01/31/17/27/heart-2024135_960_720.png'); /* Replace with actual explosion image URL */
             background-size: cover;
+            animation: explode 0.5s;
+        }
+        @keyframes explode {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.5); }
+            100% { transform: scale(0); }
         }
         .controls, .leaderboard {
             display: flex;
@@ -123,12 +130,12 @@
         .life {
             width: 30px;
             height: 30px;
-            background-image: url('https://path/to/full-heart.png'); /* Replace with actual full heart image URL */
+            background-image: url('https://cdn.pixabay.com/photo/2017/01/31/17/27/heart-2024135_960_720.png'); /* Replace with actual full heart image URL */
             background-size: cover;
             margin: 0 0.5em;
         }
         .life.broken {
-            background-image: url('https://path/to/broken-heart.png'); /* Replace with actual broken heart image URL */
+            background-image: url('https://cdn.pixabay.com/photo/2017/01/31/17/27/heart-2024135_960_720.png'); /* Replace with actual broken heart image URL */
         }
     </style>
 </head>
@@ -185,6 +192,7 @@
         let gameInterval;
         let isPaused = false;
         let heartsCaught = 0;
+        let maxMissedHearts = 3;
 
         function createHeart() {
             const heart = document.createElement('div');
@@ -219,7 +227,7 @@
                     updateLives();
                     gameArea.removeChild(heart);
                     clearInterval(heartInterval);
-                    if (missedHearts >= 3) {
+                    if (missedHearts >= maxMissedHearts) {
                         endGame();
                     }
                 } else {
@@ -244,17 +252,23 @@
             clearInterval(gameInterval);
             const hearts = document.querySelectorAll('.heart, .explosion');
             hearts.forEach(heart => gameArea.removeChild(heart));
-            livesDisplay.forEach(life => life.classList.remove('broken'));
+            updateLives();
         }
 
         function updateLives() {
-            livesDisplay[missedHearts - 1].classList.add('broken');
+            livesDisplay.forEach((life, index) => {
+                if (index < maxMissedHearts - missedHearts) {
+                    life.classList.remove('broken');
+                } else {
+                    life.classList.add('broken');
+                }
+            });
         }
 
         function endGame() {
             clearInterval(gameInterval);
-            alert('Game Over! Trage deinen Namen ein, um deinen Score zu speichern.');
-            const playerName = playerNameInput.value || 'Unbekannt';
+            const playerName = playerNameInput.value;
+            if (!playerName) return alert('Bitte gib deinen Namen ein.');
             const scoreEntry = document.createElement('li');
             scoreEntry.textContent = `${playerName}: ${score}`;
             leaderboardList.appendChild(scoreEntry);
