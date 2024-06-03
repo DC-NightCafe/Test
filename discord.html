@@ -15,6 +15,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            align-items: center;
         }
         header {
             background-color: #ff69b4;
@@ -22,12 +23,14 @@
             text-align: center;
             padding: 2em 0;
             background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+            width: 100%;
         }
         nav {
             background-color: white;
             padding: 1em;
             border-bottom: 2px solid #ff69b4;
             text-align: center;
+            width: 100%;
         }
         nav a {
             color: #ff69b4;
@@ -42,10 +45,14 @@
             padding: 2em;
             text-align: center;
             flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .content {
             max-width: 800px;
             margin: 0 auto;
+            text-align: center;
         }
         h1 {
             font-size: 2.5em;
@@ -60,11 +67,12 @@
             color: white;
             text-align: center;
             padding: 1em 0;
+            width: 100%;
         }
         #gameArea {
             border: 2px solid #ff69b4;
-            width: 80vw;
-            height: 60vh;
+            width: 300px;
+            height: 500px;
             margin: 0 auto;
             position: relative;
             background-color: white;
@@ -76,6 +84,29 @@
             position: absolute;
             background-color: #ff1493;
             cursor: pointer;
+        }
+        .controls, .leaderboard {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 1em;
+        }
+        .leaderboard {
+            text-align: left;
+        }
+        .controls button {
+            margin: 0.5em;
+            padding: 0.5em 1em;
+            font-size: 1em;
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .leaderboard input {
+            margin: 0.5em 0;
+            padding: 0.5em;
+            width: 100%;
         }
     </style>
 </head>
@@ -89,11 +120,21 @@
         <a href="senpai.html">Shichos Lieblingsmensch Senpai</a>
     </nav>
     <main>
+        <div class="controls">
+            <button id="startBtn">Start</button>
+            <button id="pauseBtn">Pause</button>
+        </div>
         <div class="content">
             <h2>Minispiel: Herzen einsammeln</h2>
             <div id="gameArea"></div>
             <p>Punktzahl: <span id="score">0</span></p>
             <p>Level: <span id="level">1</span></p>
+        </div>
+        <div class="leaderboard">
+            <h3>Leaderboard</h3>
+            <ul id="leaderboardList"></ul>
+            <input type="text" id="playerName" placeholder="Dein Name">
+            <button id="submitScore">Punkte eintragen</button>
         </div>
     </main>
     <div class="footer">
@@ -103,9 +144,18 @@
         const gameArea = document.getElementById('gameArea');
         const scoreDisplay = document.getElementById('score');
         const levelDisplay = document.getElementById('level');
+        const leaderboardList = document.getElementById('leaderboardList');
+        const playerNameInput = document.getElementById('playerName');
+        const submitScoreButton = document.getElementById('submitScore');
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+
         let score = 0;
         let level = 1;
         let heartSpeed = 2000;
+        let missedHearts = 0;
+        let gameInterval;
+        let isPaused = false;
 
         function createHeart() {
             const heart = document.createElement('div');
@@ -130,10 +180,16 @@
 
         function moveHeart(heart) {
             const heartInterval = setInterval(() => {
+                if (isPaused) return;
+
                 const heartTop = parseFloat(heart.style.top);
                 if (heartTop + 30 >= gameArea.clientHeight) {
+                    missedHearts++;
                     gameArea.removeChild(heart);
                     clearInterval(heartInterval);
+                    if (missedHearts >= 3) {
+                        endGame();
+                    }
                 } else {
                     heart.style.top = `${heartTop + 5}px`;
                 }
@@ -141,10 +197,41 @@
         }
 
         function startGame() {
-            setInterval(createHeart, heartSpeed);
+            resetGame();
+            gameInterval = setInterval(createHeart, heartSpeed);
         }
 
-        startGame();
+        function resetGame() {
+            score = 0;
+            level = 1;
+            missedHearts = 0;
+            heartSpeed = 2000;
+            scoreDisplay.textContent = score;
+            levelDisplay.textContent = level;
+            clearInterval(gameInterval);
+            const hearts = document.querySelectorAll('.heart');
+            hearts.forEach(heart => gameArea.removeChild(heart));
+        }
+
+        function endGame() {
+            clearInterval(gameInterval);
+            const playerName = playerNameInput.value || 'Unbekannt';
+            const scoreEntry = document.createElement('li');
+            scoreEntry.textContent = `${playerName}: ${score}`;
+            leaderboardList.appendChild(scoreEntry);
+            resetGame();
+        }
+
+        startBtn.addEventListener('click', () => {
+            isPaused = false;
+            startGame();
+        });
+
+        pauseBtn.addEventListener('click', () => {
+            isPaused = !isPaused;
+        });
+
+        submitScoreButton.addEventListener('click', endGame);
     </script>
 </body>
 </html>
