@@ -185,6 +185,12 @@
             <h3>Leaderboard</h3>
             <ul id="leaderboardList"></ul>
         </div>
+        <div class="player-input">
+            <label for="playerName">Spielername:</label>
+            <input type="text" id="playerName" name="playerName">
+            <button id="submitScore
+">Punktzahl einreichen</button>
+        </div>
     </main>
     <div class="footer">
         <p>Mit Liebe geschrieben für Shicho</p>
@@ -301,8 +307,11 @@
 
         function endGame() {
             clearInterval(gameInterval);
-            const playerName = prompt('Spiel vorbei! Bitte gib deinen Namen ein:');
-            if (!playerName) return;
+            const playerName = playerNameInput.value.trim();
+            if (!playerName) {
+                alert('Bitte gib deinen Namen ein, um die Punktzahl einzureichen.');
+                return;
+            }
             const scoreEntry = document.createElement('li');
             scoreEntry.textContent = `${playerName}: ${score}`;
             leaderboardList.appendChild(scoreEntry);
@@ -345,6 +354,8 @@
                 });
             }
         });
+
+        submitScoreButton.addEventListener('click', endGame);
 
         document.addEventListener('DOMContentLoaded', updateLeaderboard);
     </script>
