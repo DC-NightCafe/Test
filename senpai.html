@@ -8,9 +8,13 @@
         body {
             font-family: 'Arial', sans-serif;
             background-color: #fff0f5;
+            background-image: url('https://www.transparenttextures.com/patterns/gplay.png');
             color: #333;
             margin: 0;
             padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         header {
             background-color: #ff69b4;
@@ -22,16 +26,25 @@
         main {
             padding: 2em;
             text-align: center;
-            background-image: url('https://www.transparenttextures.com/patterns/gplay.png');
+            flex-grow: 1;
+        }
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+        }
+        p {
+            font-size: 1.2em;
+            line-height: 1.6;
         }
         .footer {
             background-color: #ff69b4;
             color: white;
             text-align: center;
             padding: 1em 0;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
         }
         nav a {
             color: #ff69b4;
@@ -39,20 +52,30 @@
             margin: 0 1em;
             font-weight: bold;
         }
+        .active {
+            border-bottom: 2px solid #ff69b4;
+        }
+        nav {
+            background-color: white;
+            padding: 1em;
+            border-bottom: 2px solid #ff69b4;
+        }
     </style>
 </head>
 <body>
     <header>
         <h1>Shichos Lieblingsmensch Senpai</h1>
     </header>
+    <nav>
+        <a href="index.html">Startseite</a>
+        <a href="discord.html">Shichos Lieblings-Discord-Server</a>
+        <a href="senpai.html" class="active">Shichos Lieblingsmensch Senpai</a>
+    </nav>
     <main>
-        <nav>
-            <a href="index.html">Startseite</a>
-            <a href="discord.html">Discord-Server</a>
-            <a href="senpai.html">Senpai</a>
-        </nav>
-        <h2>Senpai</h2>
-        <p>Shichos Lieblingsmensch ist Senpai. Er hat sie immer unterstützt und sie in schwierigen Zeiten aufgemuntert. Senpai ist ein wahrer Freund und ein unersetzlicher Teil ihres Lebens.</p>
+        <div class="content">
+            <h2>Senpai</h2>
+            <p>Shicho und Senpai haben eine besondere Verbindung. Senpai ist immer da, um Shicho zu unterstützen und ihr ein Lächeln ins Gesicht zu zaubern. Ihre gemeinsamen Erlebnisse und Gespräche sind voller Freude und Wärme. Eine ihrer liebsten Geschichten ist die, wie sie sich kennengelernt haben und sofort eine tiefe Freundschaft entstanden ist, die mit jedem Tag wächst.</p>
+        </div>
     </main>
     <div class="footer">
         <p>Mit Liebe geschrieben für Shicho</p>
