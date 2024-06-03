@@ -68,6 +68,7 @@
             margin: 0 auto;
             position: relative;
             background-color: white;
+            overflow: hidden;
         }
         .player, .heart {
             width: 30px;
@@ -111,21 +112,21 @@
         const gameArea = document.getElementById('gameArea');
         let score = 0;
 
-        const gameAreaRect = gameArea.getBoundingClientRect();
         const playerSpeed = 10;
 
         function movePlayer(x, y) {
             const playerRect = player.getBoundingClientRect();
-            let newX = playerRect.left + x;
-            let newY = playerRect.top + y;
+            const gameAreaRect = gameArea.getBoundingClientRect();
+            let newX = playerRect.left + x - gameAreaRect.left;
+            let newY = playerRect.top + y - gameAreaRect.top;
 
-            if (newX < gameAreaRect.left) newX = gameAreaRect.left;
-            if (newX + playerRect.width > gameAreaRect.right) newX = gameAreaRect.right - playerRect.width;
-            if (newY < gameAreaRect.top) newY = gameAreaRect.top;
-            if (newY + playerRect.height > gameAreaRect.bottom) newY = gameAreaRect.bottom - playerRect.height;
+            if (newX < 0) newX = 0;
+            if (newX + playerRect.width > gameArea.clientWidth) newX = gameArea.clientWidth - playerRect.width;
+            if (newY < 0) newY = 0;
+            if (newY + playerRect.height > gameArea.clientHeight) newY = gameArea.clientHeight - playerRect.height;
 
-            player.style.left = `${newX - gameAreaRect.left}px`;
-            player.style.top = `${newY - gameAreaRect.top}px`;
+            player.style.left = `${newX}px`;
+            player.style.top = `${newY}px`;
 
             checkCollision();
         }
