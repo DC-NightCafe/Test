@@ -70,16 +70,12 @@
             background-color: white;
             overflow: hidden;
         }
-        .player, .heart {
+        .heart {
             width: 30px;
             height: 30px;
             position: absolute;
-        }
-        .player {
-            background-color: #ff69b4;
-        }
-        .heart {
             background-color: #ff1493;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -94,89 +90,61 @@
     </nav>
     <main>
         <div class="content">
-            <h2>Minispiel: Herz einsammeln</h2>
-            <div id="gameArea">
-                <div id="player" class="player"></div>
-                <div id="heart" class="heart"></div>
-            </div>
+            <h2>Minispiel: Herzen einsammeln</h2>
+            <div id="gameArea"></div>
             <p>Punktzahl: <span id="score">0</span></p>
+            <p>Level: <span id="level">1</span></p>
         </div>
     </main>
     <div class="footer">
         <p>Mit Liebe geschrieben für Shicho</p>
     </div>
     <script>
-        const player = document.getElementById('player');
-        const heart = document.getElementById('heart');
-        const scoreDisplay = document.getElementById('score');
         const gameArea = document.getElementById('gameArea');
+        const scoreDisplay = document.getElementById('score');
+        const levelDisplay = document.getElementById('level');
         let score = 0;
+        let level = 1;
+        let heartSpeed = 2000;
 
-        const playerSpeed = 10;
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.style.left = `${Math.random() * (gameArea.clientWidth - 30)}px`;
+            heart.style.top = '0px';
 
-        function movePlayer(x, y) {
-            const playerRect = player.getBoundingClientRect();
-            const gameAreaRect = gameArea.getBoundingClientRect();
-            let newX = playerRect.left + x - gameAreaRect.left;
-            let newY = playerRect.top + y - gameAreaRect.top;
-
-            if (newX < 0) newX = 0;
-            if (newX + playerRect.width > gameArea.clientWidth) newX = gameArea.clientWidth - playerRect.width;
-            if (newY < 0) newY = 0;
-            if (newY + playerRect.height > gameArea.clientHeight) newY = gameArea.clientHeight - playerRect.height;
-
-            player.style.left = `${newX}px`;
-            player.style.top = `${newY}px`;
-
-            checkCollision();
-        }
-
-        function moveHeart() {
-            const maxX = gameArea.clientWidth - heart.clientWidth;
-            const maxY = gameArea.clientHeight - heart.clientHeight;
-
-            const randomX = Math.floor(Math.random() * maxX);
-            const randomY = Math.floor(Math.random() * maxY);
-
-            heart.style.left = `${randomX}px`;
-            heart.style.top = `${randomY}px`;
-        }
-
-        function checkCollision() {
-            const playerRect = player.getBoundingClientRect();
-            const heartRect = heart.getBoundingClientRect();
-
-            if (!(playerRect.right < heartRect.left || 
-                  playerRect.left > heartRect.right || 
-                  playerRect.bottom < heartRect.top || 
-                  playerRect.top > heartRect.bottom)) {
+            heart.addEventListener('click', () => {
                 score++;
                 scoreDisplay.textContent = score;
-                moveHeart();
-            }
+                gameArea.removeChild(heart);
+                if (score % 10 === 0) {
+                    level++;
+                    levelDisplay.textContent = level;
+                    heartSpeed *= 0.9;
+                }
+            });
+
+            gameArea.appendChild(heart);
+            moveHeart(heart);
         }
 
-        document.addEventListener('keydown', (event) => {
-            switch(event.key) {
-                case 'ArrowUp':
-                    movePlayer(0, -playerSpeed);
-                    break;
-                case 'ArrowDown':
-                    movePlayer(0, playerSpeed);
-                    break;
-                case 'ArrowLeft':
-                    movePlayer(-playerSpeed, 0);
-                    break;
-                case 'ArrowRight':
-                    movePlayer(playerSpeed, 0);
-                    break;
-            }
-        });
+        function moveHeart(heart) {
+            const heartInterval = setInterval(() => {
+                const heartTop = parseFloat(heart.style.top);
+                if (heartTop + 30 >= gameArea.clientHeight) {
+                    gameArea.removeChild(heart);
+                    clearInterval(heartInterval);
+                } else {
+                    heart.style.top = `${heartTop + 5}px`;
+                }
+            }, heartSpeed / 100);
+        }
 
-        // Initialize player and heart positions
-        player.style.left = '0px';
-        player.style.top = '0px';
-        moveHeart();
+        function startGame() {
+            setInterval(createHeart, heartSpeed);
+        }
+
+        startGame();
     </script>
 </body>
 </html>
