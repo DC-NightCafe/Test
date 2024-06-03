@@ -8,9 +8,13 @@
         body {
             font-family: 'Arial', sans-serif;
             background-color: #fff0f5;
+            background-image: url('https://www.transparenttextures.com/patterns/gplay.png');
             color: #333;
             margin: 0;
             padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         header {
             background-color: #ff69b4;
@@ -22,16 +26,25 @@
         main {
             padding: 2em;
             text-align: center;
-            background-image: url('https://www.transparenttextures.com/patterns/gplay.png');
+            flex-grow: 1;
+        }
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+        }
+        p {
+            font-size: 1.2em;
+            line-height: 1.6;
         }
         .footer {
             background-color: #ff69b4;
             color: white;
             text-align: center;
             padding: 1em 0;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
         }
         nav a {
             color: #ff69b4;
@@ -39,20 +52,30 @@
             margin: 0 1em;
             font-weight: bold;
         }
+        .active {
+            border-bottom: 2px solid #ff69b4;
+        }
+        nav {
+            background-color: white;
+            padding: 1em;
+            border-bottom: 2px solid #ff69b4;
+        }
     </style>
 </head>
 <body>
     <header>
         <h1>Shichos Lieblings-Discord-Server</h1>
     </header>
+    <nav>
+        <a href="index.html">Startseite</a>
+        <a href="discord.html" class="active">Shichos Lieblings-Discord-Server</a>
+        <a href="senpai.html">Shichos Lieblingsmensch Senpai</a>
+    </nav>
     <main>
-        <nav>
-            <a href="index.html">Startseite</a>
-            <a href="discord.html">Discord-Server</a>
-            <a href="senpai.html">Senpai</a>
-        </nav>
-        <h2>NightCafe</h2>
-        <p>Shicho verbringt gerne Zeit auf dem <a href="https://discord.gg/nightcafe">NightCafe Discord-Server</a>. Dort trifft sie Gleichgesinnte, teilt ihre Interessen und findet immer jemanden zum Plaudern. Der Server ist voller kreativer und freundlicher Menschen, die eine einladende Atmosphäre schaffen.</p>
+        <div class="content">
+            <h2>NightCafe</h2>
+            <p>Shicho liebt den Discord-Server <a href="https://discord.gg/nightcafe">NightCafe</a>. Dieser Server ist ein Ort, an dem Kunst und Kreativität im Vordergrund stehen und Shicho findet dort immer wieder neue Inspiration und interessante Gespräche.</p>
+        </div>
     </main>
     <div class="footer">
         <p>Mit Liebe geschrieben für Shicho</p>
