@@ -8,9 +8,13 @@
         body {
             font-family: 'Arial', sans-serif;
             background-color: #fff0f5;
+            background-image: url('https://www.transparenttextures.com/patterns/gplay.png');
             color: #333;
             margin: 0;
             padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         header {
             background-color: #ff69b4;
@@ -22,7 +26,7 @@
         main {
             padding: 2em;
             text-align: center;
-            background-image: url('https://www.transparenttextures.com/patterns/gplay.png');
+            flex-grow: 1;
         }
         .heart {
             color: #ff1493;
@@ -45,15 +49,15 @@
             color: white;
             text-align: center;
             padding: 1em 0;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
         }
         nav a {
             color: #ff69b4;
             text-decoration: none;
             margin: 0 1em;
             font-weight: bold;
+        }
+        .active {
+            border-bottom: 2px solid #ff69b4;
         }
         ul {
             list-style-type: none;
@@ -67,6 +71,11 @@
             text-decoration: none;
             font-weight: bold;
         }
+        nav {
+            background-color: white;
+            padding: 1em;
+            border-bottom: 2px solid #ff69b4;
+        }
     </style>
 </head>
 <body>
@@ -74,6 +83,11 @@
         <h1>Meine Liebe zu Shicho</h1>
         <p class="heart">❤️</p>
     </header>
+    <nav>
+        <a href="index.html" class="active">Startseite</a>
+        <a href="discord.html">Shichos Lieblings-Discord-Server</a>
+        <a href="senpai.html">Shichos Lieblingsmensch Senpai</a>
+    </nav>
     <main>
         <div class="content">
             <h2>Unsere Geschichte</h2>
@@ -82,12 +96,6 @@
             <p>Seitdem haben wir öfter geredet und jetzt fangen wir sogar gemeinsame Filme und Serien an und verbringen immer mehr Zeit zusammen, teilweise alleine. Wir hatten sogar die Nummern ausgetauscht, was wir beide eigentlich nie machen. Letztens im Chat meintest du, meine Stimme sei verführerisch ^^ Da dachte ich mir nur danke und sehr interessant ^^ Und jetzt vor kurzem, am 02.06.24, hattest du gesagt: "Vielleicht schauen dich Frauen an, weil du hübsch bist." Ich natürlich nur in meinem Kopf: Sehr, sehr, sehr interessant! Habe mich direkt bei dir für die netten Worte bedankt ^^</p>
             
             <p>Und was ich dir noch erzählen wollte, Shicho: Vor einiger Zeit meinten ein paar, mit denen ich im Call war, dass sie uns zusammen matchen. Sie meinen, dass wir zusammen süß wären. Frag mich nicht! Ich habe nie dich erwähnt oder sonst was. Das kam von denen ganz allein xD. Mal schauen, was die Zukunft mit uns beiden vorhat. Ich hab dich lieb, Shicho <3</p>
-
-            <h2>Entdecke mehr</h2>
-            <ul>
-                <li><a href="discord.html">Shichos Lieblings-Discord-Server</a></li>
-                <li><a href="senpai.html">Shichos Lieblingsmensch Senpai</a></li>
-            </ul>
         </div>
     </main>
     <div class="footer">
